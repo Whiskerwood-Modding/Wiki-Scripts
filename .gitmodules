@@ -1,0 +1,3 @@
+[submodule "PageGenerator/CUE4Parse"]
+	path = PageGenerator/CUE4Parse
+	url = https://github.com/FabianFG/CUE4Parse.git
