@@ -4,6 +4,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PageGenerator", "PageGenera
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CUE4Parse", "CUE4Parse\CUE4Parse\CUE4Parse.csproj", "{D75B0361-C7AA-4E29-8E7D-FD41ACE1B796}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CUE4Parse-Conversion", "CUE4Parse\CUE4Parse-Conversion\CUE4Parse-Conversion.csproj", "{D1F0DA36-FC9D-4E91-9E3B-8028E64DC1C1}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -18,5 +20,9 @@ Global
 		{D75B0361-C7AA-4E29-8E7D-FD41ACE1B796}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D75B0361-C7AA-4E29-8E7D-FD41ACE1B796}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D75B0361-C7AA-4E29-8E7D-FD41ACE1B796}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D1F0DA36-FC9D-4E91-9E3B-8028E64DC1C1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D1F0DA36-FC9D-4E91-9E3B-8028E64DC1C1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D1F0DA36-FC9D-4E91-9E3B-8028E64DC1C1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D1F0DA36-FC9D-4E91-9E3B-8028E64DC1C1}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

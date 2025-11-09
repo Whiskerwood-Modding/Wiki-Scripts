@@ -1,0 +1,37 @@
+﻿{| class="wikitable" style="float:right; margin-left: 10px;width=40%"
+|-
+|colspan="2"style="text-align:center;"| {{PAGENAME}}
+|-
+|colspan="2"style="text-align:center;"|[[File:{{PAGENAME}}.png]]
+|-
+| '''Growth Period (Years)'''  | {{{growthPeriodInYears}}}
+|-
+| '''Consumption Remainder'''  | {{{consumptionRemainder}}}
+|-
+| '''Nutrient Saturation'''  | {{{nutrientSaturation}}}
+|-
+| '''Nutrient Starvation'''  | {{{nutrientStarvation}}}
+|-
+| '''Decay Period (Years)'''  | {{{decayPeriodInYears}}}
+|-
+| '''Nutrient Minimum'''  | {{{nutrientMinimum}}}
+|-
+| '''Light Target'''  | {{{lightTarget}}}
+|-
+| '''Light Penalty'''  | {{{lightPenalty}}}
+|-
+| '''Rock Penalty'''  | {{{rockPenalty}}}
+|-
+| '''Pollution Penalty'''  | {{{pollutionPenalty}}}
+|-
+| '''Maximum Yield'''  | {{{maximumYield}}}
+|-
+| '''Yield Growth Threshold'''  | {{{yieldGrowthThreshold}}}
+|-
+| '''Frost Growth Threshold'''  | {{{frostGrowthThreshold}}}
+|-
+| '''Frost Rot Threshold'''  | {{{frostRotThreshold}}}
+|-
+| '''Required Unlock'''  | {{{requiredUnlock}}}
+|}
+
