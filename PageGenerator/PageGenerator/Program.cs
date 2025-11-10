@@ -6,11 +6,11 @@ namespace PageGenerator;
 
 class Program
 {
-    //This is the default steam install location, if you use a different location you will have to adjust this
+    //This is the default steam install location
     private const string _pakDir = @"C:\Program Files (x86)\Steam\steamapps\common\Whiskerwood\Whiskerwood\Content\Paks";
     private const EGame _version = EGame.GAME_UE5_6;
     private const bool _replaceFiles = true;
-    // The following paths assume you run this script from the REPO_TOP/bin/debug/net8.0 folder (the default location visual studio runs it from when you use the debugger)
+    // The following paths assume you run this script from the REPO_TOP/PageGenerator/bin/debug/net8.0 folder (the default location visual studio runs it from when you use the debugger)
     private const string _mapping = @"../../../../Whiskerwood.usmap";     
     private const string _templateDir = @"..\..\..\..\PageTemplates";
     private const string _outputDir = @"..\..\..\..\Output";    

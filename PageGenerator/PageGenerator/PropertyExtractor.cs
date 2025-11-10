@@ -10,7 +10,8 @@ namespace PageGenerator
 {
     public static class PropertyExtractor
     {
-        private const string StructDefinitionsDir = @"F:\Github Projects\Other\Whiskerwood-Wiki-Scripts\PageGenerator\StructDefinitions";
+        // The following paths assume you run this script from the REPO_TOP/PageGenerator/bin/debug/net8.0 folder (the default location visual studio runs it from when you use the debugger)
+        private const string StructDefinitionsDir = @"..\..\..\..\StructDefinitions";
 
         // Generic property extraction method that uses struct definitions
         public static Dictionary<string, string> ExtractPropertiesForTemplate(string templateName, FStructFallback data, string structName)
