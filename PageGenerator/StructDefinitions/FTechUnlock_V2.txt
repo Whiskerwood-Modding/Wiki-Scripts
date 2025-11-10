@@ -1,0 +1,22 @@
+﻿---@class FTechUnlock_V2 : FTableRowBase
+---@field useGridActorForLoc boolean
+---@field Title FString
+---@field Description FString
+---@field demoLocked boolean
+---@field isHidden boolean
+---@field faction FString
+---@field subCategory FString
+---@field giftableInDemo boolean
+---@field giftable boolean
+---@field giftPool int32
+---@field researchable boolean
+---@field scienceCost int32
+---@field researchTier int32
+---@field unlockedByDefault boolean
+---@field childUnlocks TArray<FName>
+---@field associatedGridActor FName
+---@field prerequisiteUnlocks TArray<FName>
+---@field tierSortOrder int32
+---@field associatedRecipe FName
+---@field isQuestRelated boolean
+

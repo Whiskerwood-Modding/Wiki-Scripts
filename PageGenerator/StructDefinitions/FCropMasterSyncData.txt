@@ -1,0 +1,17 @@
+﻿---@class FCropMasterSyncData : FTableRowBase
+---@field GrowthPeriodInYears float
+---@field ConsumptionRemainder float
+---@field NutrientSaturation float
+---@field NutrientStarvation float
+---@field DecayPeriodInYears float
+---@field NutrientMinimum float
+---@field LightTarget float
+---@field LightPenalty float
+---@field RockPenalty float
+---@field PollutionPenalty float
+---@field MaximumYield float
+---@field YieldGrowthThreshold float
+---@field FrostGrowthThreshold uint8
+---@field FrostRotThreshold uint8
+---@field RequiredUnlock FName
+

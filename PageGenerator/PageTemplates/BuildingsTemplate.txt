@@ -1,0 +1,67 @@
+﻿{| class="wikitable" style="float:right; margin-left: 10px;width=40%"
+|-
+|colspan="2"style="text-align:center;"| {{PAGENAME}}
+|-
+|colspan="2"style="text-align:center;"|[[File:{{PAGENAME}}.png]]
+|-
+| '''String Key'''  | {{{stringKey}}}
+|-
+| '''Description'''  | {{{description}}}
+|-
+| '''Cost 1'''  | {{{cost1}}} x{{{ct1}}}
+|-
+| '''Cost 2'''  | {{{cost2}}} x{{{ct2}}}
+|-
+| '''Cost 3'''  | {{{cost3}}} x{{{ct3}}}
+|-
+| '''Cost 4'''  | {{{cost4}}} x{{{ct4}}}
+|-
+| '''Unlock Prerequisite'''  | {{{unlockPrerequisite}}}
+|-
+| '''Toolbar Group'''  | {{{toolbarGroup}}}
+|-
+| '''Toolbar Sort Order'''  | {{{toolbarGroupSort}}}
+|-
+| '''Uses Custom Icon'''  | {{{useCustomIcon}}}
+|-
+| '''Structure Type'''  | {{{structureType}}}
+|-
+| '''Max Agents (Contextual)'''  | {{{maxAgents_contextual}}}
+|-
+| '''House Tier'''  | {{{asHouseTier}}}
+|-
+| '''Industry Definition'''  | {{{asIndustryDef}}}
+|-
+| '''Supported Industry Recipes'''  | {{{supportedIndustryRecipes}}}
+|-
+| '''Min Maintenance Interval'''  | {{{minMaintenanceInterval}}}
+|-
+| '''Worker Color'''  | {{{workerColor}}}
+|-
+| '''Limit One'''  | {{{limitOne}}}
+|-
+| '''Requires Construction'''  | {{{requiresConstruction}}}
+|-
+| '''Decor Type'''  | {{{decorType}}}
+|-
+| '''Guild Specialty'''  | {{{guildSpecialty}}}
+|-
+| '''Hard Labor'''  | {{{hardLabor}}}
+|-
+| '''Industrial Labor'''  | {{{industrialLabor}}}
+|-
+| '''Tooltip Tags'''  | {{{tooltipTags}}}
+|-
+| '''Construction Time'''  | {{{constructionTime}}}
+|-
+| '''Catalyst'''  | {{{catalyst}}}
+|-
+| '''No Refund'''  | {{{norefund}}}
+|-
+| '''Randomly Rotate'''  | {{{randomlyRotate}}}
+|-
+| '''Refund Rule'''  | {{{refundRule}}}
+|-
+| '''Quality'''  | {{{quality}}}
+|}
+

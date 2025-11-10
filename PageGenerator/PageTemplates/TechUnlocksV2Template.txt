@@ -1,0 +1,45 @@
+﻿{| class="wikitable" style="float:right; margin-left: 10px;width=40%"
+|-
+|colspan="2"style="text-align:center;"| {{PAGENAME}}
+|-
+|colspan="2"style="text-align:center;"|[[File:{{PAGENAME}}.png]]
+|-
+| '''Title'''  | {{{title}}}
+|-
+| '''Description'''  | {{{description}}}
+|-
+| '''Faction'''  | {{{faction}}}
+|-
+| '''Sub Category'''  | {{{subCategory}}}
+|-
+| '''Science Cost'''  | {{{scienceCost}}}
+|-
+| '''Research Tier'''  | {{{researchTier}}}
+|-
+| '''Tier Sort Order'''  | {{{tierSortOrder}}}
+|-
+| '''Demo Locked'''  | {{{demoLocked}}}
+|-
+| '''Hidden'''  | {{{isHidden}}}
+|-
+| '''Giftable in Demo'''  | {{{giftableInDemo}}}
+|-
+| '''Giftable'''  | {{{giftable}}}
+|-
+| '''Gift Pool'''  | {{{giftPool}}}
+|-
+| '''Researchable'''  | {{{researchable}}}
+|-
+| '''Unlocked by Default'''  | {{{unlockedByDefault}}}
+|-
+| '''Associated Grid Actor'''  | {{{associatedGridActor}}}
+|-
+| '''Associated Recipe'''  | {{{associatedRecipe}}}
+|-
+| '''Quest Related'''  | {{{isQuestRelated}}}
+|-
+| '''Child Unlocks'''  | {{{childUnlocks}}}
+|-
+| '''Prerequisite Unlocks'''  | {{{prerequisiteUnlocks}}}
+|}
+

@@ -1,0 +1,36 @@
+﻿---@class FGridActorDefinition_MasterSyncFormat : FTableRowBase
+---@field stringKey FString
+---@field Description FString
+---@field cost1 FName
+---@field ct1 int32
+---@field cost2 FName
+---@field ct2 int32
+---@field cost3 FName
+---@field ct3 int32
+---@field cost4 FName
+---@field ct4 int32
+---@field unlockPrerequisite FName
+---@field toolbarGroup FName
+---@field toolbarGroupSort int32
+---@field useCustomIcon boolean
+---@field structureType FName
+---@field maxAgents_contextual int32
+---@field asHouseTier int32
+---@field asIndustryDef FName
+---@field supportedIndustryRecipes TArray<FName>
+---@field minMaintenanceInterval int32
+---@field workerColor FColor
+---@field limitOne boolean
+---@field requiresConstruction boolean
+---@field decorType FName
+---@field guildSpecialty FName
+---@field hardLabor boolean
+---@field industrialLabor boolean
+---@field TooltipTags TArray<FName>
+---@field constructionTime float
+---@field catalyst FName
+---@field norefund boolean
+---@field randomlyRotate boolean
+---@field refundRule FName
+---@field Quality int32
+
