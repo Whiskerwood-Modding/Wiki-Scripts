@@ -114,7 +114,10 @@ namespace PageGenerator
             // Replace remaining template placeholders
             foreach (var prop in properties)
             {
-                result = result.Replace("{{{" + prop.Key + "}}}", prop.Value);
+                //attempt to lookup our value in the language mapping before writing it out
+                string value = textLookup.TryLookupEnglishMapping(prop.Value, out var mappedValue) ? mappedValue : prop.Value;
+
+                result = result.Replace("{{{" + prop.Key + "}}}", value);
             }
 
             return result;
