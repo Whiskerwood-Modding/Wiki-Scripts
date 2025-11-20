@@ -1,19 +1,6 @@
-﻿using CommunityToolkit.HighPerformance.Helpers;
-using CUE4Parse.Encryption.Aes;
-using CUE4Parse.FileProvider;
-using CUE4Parse.GameTypes.FF7.Assets.Exports;
+﻿using CUE4Parse.FileProvider;
 using CUE4Parse.MappingsProvider;
-using CUE4Parse.UE4.Assets.Exports;
-using CUE4Parse.UE4.Assets.Exports.Engine;
-using CUE4Parse.UE4.Assets.Objects;
-using CUE4Parse.UE4.Assets.Objects.Properties;
-using CUE4Parse.UE4.Objects.Core.i18N;
-using CUE4Parse.UE4.Objects.Core.Misc;
-using CUE4Parse.UE4.Objects.UObject;
 using CUE4Parse.UE4.Versions;
-using Newtonsoft.Json;
-using System.Data;
-using static Org.BouncyCastle.Math.EC.ECCurve;
 
 namespace PageGenerator;
 

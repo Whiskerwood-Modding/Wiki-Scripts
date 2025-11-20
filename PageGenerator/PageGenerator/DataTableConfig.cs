@@ -38,6 +38,24 @@
                     "Buildings",
                     "FGridActorDefinition_MasterSyncFormat"
                 )
+            },
+            {
+                "ResourcesTemplate.txt",
+                new DataTableConfig(
+                    "ResourcesTemplate.txt",
+                    "/Game/Data/AssetLookups/ResourceLookup.ResourceLookup",
+                    "Resources",
+                    "FResourceDef"
+                )
+            },
+            {
+                "BuildingsOverviewTemplate.txt",
+                new DataTableConfig(
+                    "BuildingsOverviewTemplate.txt",
+                    "/Game/Data/GridactorDefs_Sync.GridactorDefs_Sync",
+                    "BuildingsOverview",
+                    "FGridActorDefinition_MasterSyncFormat"
+                )
             }
             
             // EXAMPLE: Add more DataTable configurations here in the future

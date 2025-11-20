@@ -1,0 +1,21 @@
+﻿Buildings are structures that can be constructed in your colony to provide various functions, from housing and production to decoration and infrastructure.
+
+==List of Buildings==
+{| class="wikitable sortable" style="width:100%; margin-left:auto; margin-right:auto;"
+!Icon
+!Building
+!Description
+!Tooltip
+!Structure Type
+!Construction Cost
+!Construction Time
+|-
+|[[File:{{{icon}}}.png|128px]]
+|{{{stringKey}}}
+|{{{description}}}
+|{{{tooltipTags}}}
+|{{{structureType}}}
+|{{{constructionCost}}}
+|{{{constructionTime}}}
+|-
+|}

@@ -1,4 +1,4 @@
-﻿using System;
+﻿﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
@@ -19,7 +19,15 @@ namespace PageGenerator
             // Try to use struct-based extraction first
             if (!string.IsNullOrEmpty(structName))
             {
-                return ExtractPropertiesFromStruct(data, structName);
+                var properties = ExtractPropertiesFromStruct(data, structName);
+                
+                // Special handling for BuildingsOverviewTemplate to combine cost fields
+                if (templateName == "BuildingsOverviewTemplate.txt")
+                {
+                    properties = ProcessBuildingsCosts(properties);
+                }
+                
+                return properties;
             }
             
             // Fall back to generic extraction if no struct name provided
@@ -27,6 +35,34 @@ namespace PageGenerator
             {
                 _ => ExtractGenericProperties(data)
             };
+        }
+
+        private static Dictionary<string, string> ProcessBuildingsCosts(Dictionary<string, string> properties)
+        {
+            // Combine cost1-4 and ct1-4 into a single constructionCost field
+            var costs = new List<string>();
+            
+            for (int i = 1; i <= 4; i++)
+            {
+                var costKey = $"cost{i}";
+                var countKey = $"ct{i}";
+                
+                if (properties.TryGetValue(costKey, out var cost) && 
+                    properties.TryGetValue(countKey, out var count) &&
+                    !string.IsNullOrEmpty(cost) && 
+                    cost != "N/A" && 
+                    cost != "None" &&
+                    !string.IsNullOrEmpty(count) && 
+                    count != "N/A" && 
+                    count != "0")
+                {
+                    costs.Add($"{cost} x{count}");
+                }
+            }
+            
+            properties["constructionCost"] = costs.Count > 0 ? string.Join(", ", costs) : "None";
+            
+            return properties;
         }
 
         private static Dictionary<string, string> ExtractPropertiesFromStruct(FStructFallback data, string structName)
@@ -196,6 +232,78 @@ namespace PageGenerator
             return "N/A";
         }
 
+        public static string GetArrayValue(FStructFallback data, string propertyName)
+        {
+            try
+            {
+                // Handle arrays - try to get as array of FName first (common for tooltip tags)
+                if (data.TryGetValue<FName[]>(out var fnameArray, propertyName))
+                {
+                    if (fnameArray.Length == 0)
+                        return string.Empty; // Return empty string for empty arrays
+                        
+                    // For TooltipTags, perform text lookup for each item
+                    if (propertyName.ToLowerInvariant() == "tooltiptags")
+                    {
+                        var tooltips = new List<string>();
+                        var textLookup = new textLookup();
+                        foreach (var tag in fnameArray)
+                        {
+                            if (!string.IsNullOrEmpty(tag.Text) && tag.Text != "None")
+                            {
+                                // Use text lookup for tooltip tags
+                                var lookupResult = textLookup.TryLookupEnglishMapping(tag.Text, out var mappedValue);
+                                tooltips.Add(lookupResult ? mappedValue : tag.Text);
+                            }
+                        }
+                        return string.Join(", ", tooltips);
+                    }
+                    
+                    // For other arrays, just join the text values
+                    var values = fnameArray.Where(x => !string.IsNullOrEmpty(x.Text) && x.Text != "None")
+                                          .Select(x => x.Text);
+                    return string.Join(", ", values);
+                }
+                
+                // Try string array
+                if (data.TryGetValue<string[]>(out var stringArray, propertyName))
+                {
+                    if (stringArray.Length == 0)
+                        return string.Empty;
+                    var values = stringArray.Where(x => !string.IsNullOrEmpty(x));
+                    return string.Join(", ", values);
+                }
+                
+                // Try generic array
+                foreach (var property in data.Properties)
+                {
+                    if (property.Name.Text == propertyName)
+                    {
+                        var value = property.Tag?.GenericValue;
+                        if (value != null)
+                        {
+                            // Handle as comma-separated if it looks like an array representation
+                            var stringValue = value.ToString() ?? string.Empty;
+                            if (stringValue.StartsWith('[') && stringValue.EndsWith(']'))
+                            {
+                                // Remove brackets and clean up
+                                stringValue = stringValue.Trim('[', ']');
+                                if (string.IsNullOrWhiteSpace(stringValue))
+                                    return string.Empty;
+                                return stringValue;
+                            }
+                            return stringValue;
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error getting array value for {propertyName}: {ex.Message}");
+            }
+            return string.Empty;
+        }
+
         public static string GetIntValue(FStructFallback data, string propertyName)
         {
             try
@@ -236,7 +344,7 @@ namespace PageGenerator
             return "N/A";
         }
 
-        public static string GetArrayValue(FStructFallback data, string propertyName)
+        public static string GetArrayValueOld(FStructFallback data, string propertyName)
         {
             try
             {

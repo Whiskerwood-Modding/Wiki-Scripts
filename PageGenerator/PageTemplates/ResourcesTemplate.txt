@@ -1,0 +1,13 @@
+﻿Resources are collectible game items that become used up when taking a variety of actions, such as placing Building schematics, accepting Whiskers into your colony, paying for end-of-day costs or taxes, and so on.
+
+==List of Resources==
+{| class="wikitable" style="width:90%; margin-left:auto; margin-right:auto;"
+!Resource
+!Description
+!Base Trade Value
+|-
+|[[File:{{{icon}}}.png]] [[{{{stringKey}}}]]
+|{{{descriptionKey}}}
+|{{{baseTradeValue}}}
+|-
+|}

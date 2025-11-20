@@ -1,6 +1,8 @@
 ﻿using CUE4Parse.FileProvider;
 using CUE4Parse.UE4.Assets.Exports.Engine;
 using CUE4Parse.UE4.Assets.Objects;
+using CUE4Parse.UE4.Objects.Core.i18N;
+using CUE4Parse.UE4.Assets.Objects.Properties;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -57,12 +59,12 @@ namespace PageGenerator
             }
 
             // Try common typed properties first
-            if (fallback.TryGetValue<CUE4Parse.UE4.Objects.Core.i18N.FText>(out var ftext, "Text", "Value"))
+            if (fallback.TryGetValue<FText>(out var ftext, "Text", "Value"))
             {
                 valueFound = ftext.ToString();
                 return true;
             }
-            if (fallback.TryGetValue<CUE4Parse.UE4.Assets.Objects.Properties.StrProperty>(out var strProp, "Text", "Value"))
+            if (fallback.TryGetValue<StrProperty>(out var strProp, "Text", "Value"))
             {
                 // StrProperty implementations vary; try known property names then ToString()
                 var t = strProp.GetType();

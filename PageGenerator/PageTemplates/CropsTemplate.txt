@@ -1,37 +1,55 @@
-﻿{| class="wikitable" style="float:right; margin-left: 10px;width=40%"
+﻿== Overview ==
+{{PAGENAME}} is a crop that can be grown in your colony. Like all crops, it requires proper soil conditions, adequate lighting, and protection from harsh environmental factors to thrive.
+
+{| class="wikitable" style="float:left; margin-right: 15px; width:350px; clear:right;"
 |-
-|colspan="2"style="text-align:center;"| {{PAGENAME}}
+! colspan="2" style="text-align:center; background-color:#dc8b00; font-size:1.2em;" | {{PAGENAME}}
 |-
-|colspan="2"style="text-align:center;"|[[File:{{PAGENAME}}.png]]
+| colspan="2" style="text-align:center; padding:10px;" | [[File:{{PAGENAME}}.png|128px]]
 |-
-| '''Growth Period (Years)'''  | {{{growthPeriodInYears}}}
+! colspan="2" style="text-align:center; background-color:#dc8b00;" | Growth Information
 |-
-| '''Consumption Remainder'''  | {{{consumptionRemainder}}}
+| style="width:50%; font-weight:bold;" | Growth Period
+| style="width:50%;" | {{{growthPeriodInYears}}} years
 |-
-| '''Nutrient Saturation'''  | {{{nutrientSaturation}}}
+| style="font-weight:bold;" | Decay Period  
+| {{{decayPeriodInYears}}} years
 |-
-| '''Nutrient Starvation'''  | {{{nutrientStarvation}}}
+| style="font-weight:bold;" | Maximum Yield
+| {{{maximumYield}}}
 |-
-| '''Decay Period (Years)'''  | {{{decayPeriodInYears}}}
+! colspan="2" style="text-align:center; background-color:#dc8b00;" | Soil Requirements
 |-
-| '''Nutrient Minimum'''  | {{{nutrientMinimum}}}
+| style="font-weight:bold;" | Nutrient Minimum
+| {{{nutrientMinimum}}}
 |-
-| '''Light Target'''  | {{{lightTarget}}}
+| style="font-weight:bold;" | Nutrient Saturation
+| {{{nutrientSaturation}}}
 |-
-| '''Light Penalty'''  | {{{lightPenalty}}}
+| style="font-weight:bold;" | Nutrient Starvation
+| {{{nutrientStarvation}}}
 |-
-| '''Rock Penalty'''  | {{{rockPenalty}}}
+! colspan="2" style="text-align:center; background-color:#dc8b00;" | Environmental Factors
 |-
-| '''Pollution Penalty'''  | {{{pollutionPenalty}}}
+| style="font-weight:bold;" | Light Target
+| {{{lightTarget}}}
 |-
-| '''Maximum Yield'''  | {{{maximumYield}}}
+| style="font-weight:bold;" | Light Penalty
+| {{{lightPenalty}}}
 |-
-| '''Yield Growth Threshold'''  | {{{yieldGrowthThreshold}}}
+| style="font-weight:bold;" | Rock Penalty
+| {{{rockPenalty}}}
 |-
-| '''Frost Growth Threshold'''  | {{{frostGrowthThreshold}}}
+| style="font-weight:bold;" | Pollution Penalty
+| {{{pollutionPenalty}}}
 |-
-| '''Frost Rot Threshold'''  | {{{frostRotThreshold}}}
+! colspan="2" style="text-align:center; background-color:#dc8b00;" | Temperature Tolerance
 |-
-| '''Required Unlock'''  | {{{requiredUnlock}}}
+| style="font-weight:bold;" | Frost Growth Threshold
+| {{{frostGrowthThreshold}}} (unit unknown)
+|-
+| style="font-weight:bold;" | Frost Rot Threshold
+| {{{frostRotThreshold}}} (unit unknown)
 |}
 
+[[Category:Crops]]

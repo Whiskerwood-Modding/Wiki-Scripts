@@ -1,0 +1,5 @@
+﻿---@class FResourceDef : FTableRowBase
+---@field stringKey FName
+---@field descriptionKey FName
+---@field Icon UTexture2D
+---@field baseTradeValue int32

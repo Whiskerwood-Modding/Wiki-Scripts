@@ -1,8 +1,13 @@
 ﻿using System.Text;
+using System.Text;
 using System.Linq;
 using CUE4Parse.FileProvider;
 using CUE4Parse.UE4.Assets.Exports.Engine;
 using CUE4Parse.UE4.Assets.Objects;
+using CUE4Parse.UE4.Assets.Exports.Texture;
+using CUE4Parse.UE4.Objects.UObject;
+using CUE4Parse_Conversion.Textures;
+using SkiaSharp;
 
 namespace PageGenerator
 {
@@ -65,7 +70,152 @@ namespace PageGenerator
             string outputFolderPath = Path.Combine(outputDir, config.OutputFolderName);
             Directory.CreateDirectory(outputFolderPath);
 
-            // Process each row
+            // Check if this is a special single-page template (like ResourcesTemplate)
+            if (config.TemplateName == "ResourcesTemplate.txt" || config.TemplateName == "BuildingsOverviewTemplate.txt")
+            {
+                await ProcessSinglePageTemplate(dataTable, template, config, outputFolderPath);
+            }
+            else
+            {
+                // Process each row as individual pages
+                await ProcessIndividualPages(dataTable, template, config, outputFolderPath);
+            }
+        }
+
+        private async Task ProcessSinglePageTemplate(UDataTable dataTable, string template, DataTableConfig config, string outputFolderPath)
+        {
+            Console.WriteLine($"Processing single-page template for {config.TemplateName}");
+            
+            // Extract the row template
+            var lines = template.Split('\n').ToList();
+            int rowStartIndex = -1;
+            int rowEndIndex = -1;
+            
+            for (int i = 0; i < lines.Count; i++)
+            {
+                if (lines[i].Trim() == "|-" && rowStartIndex == -1)
+                {
+                    rowStartIndex = i + 1; // Start after the |-
+                }
+                else if ((lines[i].Trim() == "|-" || lines[i].Trim() == "|}") && rowStartIndex != -1)
+                {
+                    rowEndIndex = i;
+                    break;
+                }
+            }
+            
+            if (rowStartIndex == -1 || rowEndIndex == -1)
+            {
+                Console.WriteLine("Could not find row template in the template file");
+                return;
+            }
+            
+            // Extract the row template
+            var rowTemplateLines = lines.GetRange(rowStartIndex, rowEndIndex - rowStartIndex);
+            string rowTemplate = string.Join('\n', rowTemplateLines);
+            Console.WriteLine($"Extracted row template: {rowTemplate}");
+            
+            // Process all rows and build the final content
+            var allRowsContent = new List<string>();
+            int processedCount = 0;
+            
+            foreach (var row in dataTable.RowMap)
+            {
+                string rowName = row.Key.Text;
+                var rowData = row.Value;
+                
+                Console.WriteLine($"Processing row: {rowName}");
+                
+                try
+                {
+                    // Extract properties for this row
+                    var properties = PropertyExtractor.ExtractPropertiesForTemplate(config.TemplateName, rowData, config.StructName);
+                    
+                    // Skip rows for BuildingsOverviewTemplate if description is missing or building name is empty/none
+                    if (config.TemplateName == "BuildingsOverviewTemplate.txt")
+                    {
+                        // Check if description exists and is not empty
+                        if (!properties.TryGetValue("description", out var description) || 
+                            string.IsNullOrEmpty(description) || 
+                            description == "N/A")
+                        {
+                            Console.WriteLine($"Skipping row {rowName}: No description found");
+                            continue;
+                        }
+                        
+                        // Check if stringKey (building name) exists and is not empty/none
+                        if (!properties.TryGetValue("stringKey", out var buildingName) || 
+                            string.IsNullOrEmpty(buildingName) || 
+                            buildingName == "N/A" || 
+                            buildingName.ToLowerInvariant() == "none")
+                        {
+                            Console.WriteLine($"Skipping row {rowName}: Building name is empty or none");
+                            continue;
+                        }
+                    }
+                    
+                    // Handle icon extraction and PNG generation
+                    if (properties.TryGetValue("icon", out var iconPath) && !string.IsNullOrEmpty(iconPath) && iconPath != "N/A")
+                    {
+                        string iconFileName = await ExtractIconAsPng(iconPath, outputFolderPath, rowName);
+                        if (!string.IsNullOrEmpty(iconFileName))
+                        {
+                            properties["icon"] = iconFileName.Replace(".png", ""); // Remove .png extension as template adds it
+                        }
+                    }
+                    
+                    // Replace placeholders in the row template
+                    string processedRow = rowTemplate;
+                    foreach (var prop in properties)
+                    {
+                        string value = textLookup.TryLookupEnglishMapping(prop.Value, out var mappedValue) ? mappedValue : prop.Value;
+                        processedRow = processedRow.Replace("{{{" + prop.Key + "}}}", value);
+                    }
+                    
+                    allRowsContent.Add(processedRow);
+                    processedCount++;
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Error processing row {rowName}: {ex.Message}");
+                }
+            }
+            
+            // Build the final page content
+            var finalLines = new List<string>();
+            
+            // Add everything before the row template
+            finalLines.AddRange(lines.GetRange(0, rowStartIndex - 1)); // Don't include the first |-
+            
+            // Add all processed rows
+            for (int i = 0; i < allRowsContent.Count; i++)
+            {
+                finalLines.Add("|-");
+                finalLines.Add(allRowsContent[i]);
+            }
+            
+            // Add the closing table tag
+            finalLines.Add("|}");
+            
+            string finalContent = string.Join('\n', finalLines);
+            
+            // Write to single file
+            string fileName = $"{config.OutputFolderName}.txt";
+            string filePath = Path.Combine(outputFolderPath, fileName);
+            
+            if (!replaceFiles && File.Exists(filePath))
+            {
+                Console.WriteLine($"Skipping {fileName} (file already exists)");
+                return;
+            }
+            
+            await File.WriteAllTextAsync(filePath, finalContent, Encoding.UTF8);
+            Console.WriteLine($"Generated single page: {fileName} with {processedCount} resources");
+        }
+
+        private async Task ProcessIndividualPages(UDataTable dataTable, string template, DataTableConfig config, string outputFolderPath)
+        {
+            // Process each row as individual pages (existing logic)
             int processedCount = 0;
             foreach (var row in dataTable.RowMap)
             {
@@ -77,7 +227,7 @@ namespace PageGenerator
                 try
                 {
                     // Generate MediaWiki content for this row
-                    string wikiContent = GenerateWikiPage(rowName, rowData, template, config);
+                    string wikiContent = GenerateWikiPage(rowData, template, config);
 
                     // Write to file
                     string fileName = $"{SanitizeFileName(rowName)}.txt";
@@ -103,7 +253,7 @@ namespace PageGenerator
             Console.WriteLine($"Completed {config.TemplateName}! Generated {processedCount} pages in {outputFolderPath}");
         }
 
-        private string GenerateWikiPage(string rowName, FStructFallback rowData, string template, DataTableConfig config)
+        private string GenerateWikiPage(FStructFallback rowData, string template, DataTableConfig config)
         {
             // Extract properties based on struct definition
             var properties = PropertyExtractor.ExtractPropertiesForTemplate(config.TemplateName, rowData, config.StructName);
@@ -236,6 +386,81 @@ namespace PageGenerator
                 return true;
                 
             return false;
+        }
+
+        private async Task<string> ExtractIconAsPng(string iconAssetPath, string outputFolderPath, string rowId)
+        {
+            try
+            {
+                Console.WriteLine($"Attempting to extract icon: {iconAssetPath}");
+                
+                // Clean up the asset path - remove any package references and get just the path
+                string cleanPath = iconAssetPath;
+                if (cleanPath.Contains('\''))
+                {
+                    // Extract path from something like "Texture2D'/Game/UI/Icons/Icon_approval.Icon_approval'"
+                    int startIndex = cleanPath.IndexOf('\'') + 1;
+                    int endIndex = cleanPath.LastIndexOf('\'');
+                    if (startIndex > 0 && endIndex > startIndex)
+                    {
+                        cleanPath = cleanPath.Substring(startIndex, endIndex - startIndex);
+                    }
+                }
+                
+                // Remove the duplicate name at the end if present (e.g., "/Game/UI/Icons/Icon_approval.Icon_approval" -> "/Game/UI/Icons/Icon_approval")
+                if (cleanPath.Contains('.'))
+                {
+                    string[] parts = cleanPath.Split('.');
+                    if (parts.Length == 2 && parts[0].EndsWith("/" + parts[1]))
+                    {
+                        cleanPath = parts[0];
+                    }
+                }
+                
+                Console.WriteLine($"Cleaned icon path: {cleanPath}");
+                
+                // Try to load the texture asset
+                UTexture2D? texture = null;
+                try
+                {
+                    texture = provider.LoadPackageObject<UTexture2D>(cleanPath);
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Failed to load texture directly: {ex.Message}");
+                    try
+                    {
+                        texture = provider.LoadPackageObject<UTexture2D>(cleanPath + ".uasset");
+                    }
+                    catch
+                    {
+                        Console.WriteLine($"Also failed with .uasset extension");
+                        return string.Empty;
+                    }
+                }
+
+                Console.WriteLine($"Successfully loaded texture: {texture.Name}");
+                
+                var cTexture = texture.Decode();
+                if (cTexture == null)
+                {
+                    Console.WriteLine($"Failed to decode texture: {texture.Name}");
+                    return string.Empty;
+                }
+                
+                string iconFileName = SanitizeFileName(rowId) + ".png";
+                string iconFilePath = Path.Combine(outputFolderPath, iconFileName);
+                var pngData = cTexture.Encode(ETextureFormat.Png, false, out var ext);
+                await File.WriteAllBytesAsync(iconFilePath, pngData);
+                
+                Console.WriteLine($"Successfully extracted icon: {iconFileName}");
+                return iconFileName;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error extracting icon {iconAssetPath}: {ex.Message}");
+                return string.Empty;
+            }
         }
 
         private static string SanitizeFileName(string fileName)
