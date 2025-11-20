@@ -1,8 +1,4 @@
-﻿﻿using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.IO;
-using System.Linq;
+﻿using System.Globalization;
 using CUE4Parse.UE4.Assets.Objects;
 using CUE4Parse.UE4.Objects.UObject;
 
@@ -61,6 +57,21 @@ namespace PageGenerator
             }
             
             properties["constructionCost"] = costs.Count > 0 ? string.Join(", ", costs) : "None";
+            
+            // Create buildingWithIcon field that combines icon and building name
+            string buildingName = properties.GetValueOrDefault("stringKey", "Unknown");
+            string iconPath = properties.TryGetValue("icon", out var icon) ? icon : string.Empty;
+            
+            if (!string.IsNullOrEmpty(iconPath) && iconPath != "N/A")
+            {
+                // Building has an icon
+                properties["buildingWithIcon"] = $"[[File:{iconPath}.png|128px]] {buildingName}";
+            }
+            else
+            {
+                // Building has no icon, just show the name
+                properties["buildingWithIcon"] = buildingName;
+            }
             
             return properties;
         }

@@ -1,13 +1,9 @@
 ﻿using System.Text;
-using System.Text;
-using System.Linq;
 using CUE4Parse.FileProvider;
 using CUE4Parse.UE4.Assets.Exports.Engine;
 using CUE4Parse.UE4.Assets.Objects;
 using CUE4Parse.UE4.Assets.Exports.Texture;
-using CUE4Parse.UE4.Objects.UObject;
 using CUE4Parse_Conversion.Textures;
-using SkiaSharp;
 
 namespace PageGenerator
 {
@@ -144,7 +140,7 @@ namespace PageGenerator
                         }
                         
                         // Check if stringKey (building name) exists and is not empty/none
-                        if (!properties.TryGetValue("stringKey", out var buildingName) || 
+                        if (!properties.TryGetValue("stringKey", out var buildingName) ||
                             string.IsNullOrEmpty(buildingName) || 
                             buildingName == "N/A" || 
                             buildingName.ToLowerInvariant() == "none")
@@ -157,10 +153,40 @@ namespace PageGenerator
                     // Handle icon extraction and PNG generation
                     if (properties.TryGetValue("icon", out var iconPath) && !string.IsNullOrEmpty(iconPath) && iconPath != "N/A")
                     {
-                        string iconFileName = await ExtractIconAsPng(iconPath, outputFolderPath, rowName);
+                        var extractedIconFileName = await ExtractIconAsPng(iconPath, outputFolderPath, rowName);
+                        if (!string.IsNullOrEmpty(extractedIconFileName))
+                        {
+                            // Set the icon property to the extracted filename without .png extension
+                            properties["icon"] = extractedIconFileName.Replace(".png", "");
+                            Console.WriteLine($"Successfully extracted icon for {rowName}: {extractedIconFileName}");
+                        }
+                        else
+                        {
+                            Console.WriteLine($"Failed to extract icon for {rowName}, will show without icon");
+                            properties["icon"] = string.Empty; // Clear icon property if extraction failed
+                        }
+                    }
+                    else
+                    {
+                        // No icon to extract
+                        properties["icon"] = string.Empty;
+                    }
+                    
+                    // For BuildingsOverviewTemplate, regenerate the buildingWithIcon after icon processing
+                    if (config.TemplateName == "BuildingsOverviewTemplate.txt")
+                    {
+                        string buildingName = properties.GetValueOrDefault("stringKey", "Unknown");
+                        string iconFileName = properties.TryGetValue("icon", out var icon) ? icon : string.Empty;
+                        
                         if (!string.IsNullOrEmpty(iconFileName))
                         {
-                            properties["icon"] = iconFileName.Replace(".png", ""); // Remove .png extension as template adds it
+                            // Building has an extracted icon
+                            properties["buildingWithIcon"] = $"[[File:{iconFileName}.png|64px]] {buildingName}";
+                        }
+                        else
+                        {
+                            // Building has no icon, just show the name
+                            properties["buildingWithIcon"] = buildingName;
                         }
                     }
                     
@@ -441,6 +467,7 @@ namespace PageGenerator
 
                 Console.WriteLine($"Successfully loaded texture: {texture.Name}");
                 
+                // Decode the texture using CUE4Parse conversion methods
                 var cTexture = texture.Decode();
                 if (cTexture == null)
                 {

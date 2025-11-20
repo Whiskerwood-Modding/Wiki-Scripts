@@ -2,7 +2,6 @@
 
 ==List of Buildings==
 {| class="wikitable sortable" style="width:100%; margin-left:auto; margin-right:auto;"
-!Icon
 !Building
 !Description
 !Tooltip
@@ -10,8 +9,7 @@
 !Construction Cost
 !Construction Time
 |-
-|[[File:{{{icon}}}.png|128px]]
-|{{{stringKey}}}
+|{{{buildingWithIcon}}}
 |{{{description}}}
 |{{{tooltipTags}}}
 |{{{structureType}}}
