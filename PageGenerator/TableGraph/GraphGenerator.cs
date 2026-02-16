@@ -565,6 +565,11 @@ public class GraphGenerator
                     ExportToJson(arg);
                     break;
                     
+                case "help":
+                case "?":
+                    PrintInteractiveHelp();
+                    break;
+                    
                 case "quit":
                 case "q":
                 case "exit":
@@ -575,6 +580,40 @@ public class GraphGenerator
                     break;
             }
         }
+    }
+    
+    /// <summary>
+    /// Print interactive help
+    /// </summary>
+    private void PrintInteractiveHelp()
+    {
+        Console.WriteLine("\n=== Available Commands ===");
+        Console.WriteLine();
+        Console.WriteLine("Search Commands:");
+        Console.WriteLine("  search <key>          - Search for partial matches (alias: s)");
+        Console.WriteLine("  exact <key>           - Search for exact matches (alias: e)");
+        Console.WriteLine("  keys <pattern>        - List all keys matching pattern (alias: k)");
+        Console.WriteLine();
+        Console.WriteLine("Browse Commands:");
+        Console.WriteLine("  tables                - List all indexed DataTables (alias: t)");
+        Console.WriteLine("  rows <table>          - List all rows in a DataTable (alias: r)");
+        Console.WriteLine("  row <table> <row>     - Show full data for a specific row");
+        Console.WriteLine();
+        Console.WriteLine("Export Commands:");
+        Console.WriteLine("  export [path]         - Export entire index to JSON file (alias: dump)");
+        Console.WriteLine("                          Default: DataTableIndex.json");
+        Console.WriteLine();
+        Console.WriteLine("Other Commands:");
+        Console.WriteLine("  help                  - Show this help message (alias: ?)");
+        Console.WriteLine("  quit                  - Exit the tool (alias: q, exit)");
+        Console.WriteLine();
+        Console.WriteLine("Examples:");
+        Console.WriteLine("  > search recipe");
+        Console.WriteLine("  > exact unlock.research1");
+        Console.WriteLine("  > keys lumber");
+        Console.WriteLine("  > rows Buildings");
+        Console.WriteLine("  > row Buildings building.lumbermill");
+        Console.WriteLine("  > export MyIndex.json");
     }
     
     private void PrintRowData(object data, string indent)
