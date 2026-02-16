@@ -6,6 +6,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CUE4Parse", "CUE4Parse\CUE4
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CUE4Parse-Conversion", "CUE4Parse\CUE4Parse-Conversion\CUE4Parse-Conversion.csproj", "{D1F0DA36-FC9D-4E91-9E3B-8028E64DC1C1}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TableGraph", "TableGraph\TableGraph.csproj", "{3CC2AADC-C778-4E20-9EBE-2FAFA5521E02}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -24,5 +26,9 @@ Global
 		{D1F0DA36-FC9D-4E91-9E3B-8028E64DC1C1}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D1F0DA36-FC9D-4E91-9E3B-8028E64DC1C1}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D1F0DA36-FC9D-4E91-9E3B-8028E64DC1C1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3CC2AADC-C778-4E20-9EBE-2FAFA5521E02}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3CC2AADC-C778-4E20-9EBE-2FAFA5521E02}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3CC2AADC-C778-4E20-9EBE-2FAFA5521E02}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3CC2AADC-C778-4E20-9EBE-2FAFA5521E02}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
