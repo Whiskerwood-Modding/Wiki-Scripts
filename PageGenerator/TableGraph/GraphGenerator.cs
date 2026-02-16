@@ -56,6 +56,7 @@ public class GraphGenerator
             .Where(f => f.Extension.Equals("uasset", StringComparison.OrdinalIgnoreCase))
             .Where(f => pathFilter == null || f.Path.Contains(pathFilter, StringComparison.OrdinalIgnoreCase))
             .Where(f => includeLoc || !f.Path.Contains("/Data/TextDB/", StringComparison.OrdinalIgnoreCase))
+            .Where(f => !f.Path.StartsWith("Engine/", StringComparison.OrdinalIgnoreCase))
             .ToList();
         
         Console.WriteLine($"Found {dataTableFiles.Count} potential asset files to scan");
@@ -393,6 +394,41 @@ public class GraphGenerator
     }
     
     /// <summary>
+    /// Export the entire index to a JSON file
+    /// </summary>
+    public void ExportToJson(string outputPath)
+    {
+        Console.WriteLine($"\nExporting index to: {outputPath}");
+        
+        var exportData = new
+        {
+            ExportDate = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"),
+            TotalTables = _tableData.Count,
+            TotalUniqueValues = _valueIndex.Count,
+            Tables = _tableData
+        };
+        
+        try
+        {
+            var json = System.Text.Json.JsonSerializer.Serialize(exportData, new System.Text.Json.JsonSerializerOptions
+            {
+                WriteIndented = true
+            });
+            
+            File.WriteAllText(outputPath, json);
+            Console.WriteLine($"Successfully exported {_tableData.Count} tables with {_valueIndex.Count} unique indexed values.");
+            
+            // Show file size
+            var fileInfo = new FileInfo(outputPath);
+            Console.WriteLine($"File size: {fileInfo.Length / 1024.0 / 1024.0:F2} MB");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error exporting to JSON: {ex.Message}");
+        }
+    }
+    
+    /// <summary>
     /// Interactive search mode
     /// </summary>
     public void InteractiveSearch()
@@ -405,6 +441,7 @@ public class GraphGenerator
         Console.WriteLine("  tables           - List all indexed DataTables");
         Console.WriteLine("  rows <table>     - List all rows in a DataTable");
         Console.WriteLine("  row <table> <row> - Show full row data");
+        Console.WriteLine("  export <path>    - Export entire index to JSON file");
         Console.WriteLine("  quit             - Exit");
         Console.WriteLine();
         
@@ -516,6 +553,16 @@ public class GraphGenerator
                     }
                     Console.WriteLine($"\nRow data for {tableMatch} -> {rowParts[1]}:");
                     PrintRowData(rowData, "  ");
+                    break;
+                    
+                case "export":
+                case "dump":
+                    if (string.IsNullOrEmpty(arg))
+                    {
+                        // Default output path
+                        arg = "DataTableIndex.json";
+                    }
+                    ExportToJson(arg);
                     break;
                     
                 case "quit":

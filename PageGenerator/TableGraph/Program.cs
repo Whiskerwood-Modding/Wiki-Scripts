@@ -64,13 +64,26 @@ class Program
             
             if (!includeLoc)
             {
-                Console.WriteLine("Excluding localization tables (/Data/TextDB/). Use --include-loc to include them.\n");
+                Console.WriteLine("Excluding localization tables (/Data/TextDB/) and Engine tables (/Engine/). Use --include-loc to include localization.\n");
+            }
+            else
+            {
+                Console.WriteLine("Excluding Engine tables (/Engine/).\n");
             }
             
             graphGenerator.BuildIndex(pathFilter, includeLoc);
             
+            // Check for export flag
+            var exportIndex = Array.IndexOf(args, "--export");
+            if (exportIndex >= 0)
+            {
+                var outputPath = exportIndex + 1 < args.Length ? args[exportIndex + 1] : "DataTableIndex.json";
+                graphGenerator.ExportToJson(outputPath);
+                return;
+            }
+            
             // If a search term was provided as argument, search and exit
-            if (args.Length > 0 && args[0] != "--filter")
+            if (args.Length > 0 && args[0] != "--filter" && args[0] != "--include-loc")
             {
                 var searchTerm = args[0];
                 bool exactMatch = args.Length > 1 && args[1] == "--exact";
