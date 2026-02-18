@@ -88,11 +88,11 @@ class Program
             
             if (!includeLoc)
             {
-                Console.WriteLine("Excluding localization tables (/Data/TextDB/) and Engine tables (/Engine/). Use --include-loc to include localization.\n");
+                Console.WriteLine("Including Loc_En table. Other localization tables (/Data/TextDB/) and Engine tables (/Engine/) excluded. Use --include-loc to include all localization.\n");
             }
             else
             {
-                Console.WriteLine("Excluding Engine tables (/Engine/).\n");
+                Console.WriteLine("Including all localization tables. Excluding Engine tables (/Engine/).\n");
             }
             
             graphGenerator.BuildIndex(pathFilter, includeLoc);
@@ -115,7 +115,6 @@ class Program
             }
             else
             {
-                // Start interactive mode
                 graphGenerator.InteractiveSearch();
             }
         }
@@ -153,8 +152,8 @@ class Program
         Console.WriteLine();
         Console.WriteLine("  --filter <path>       Only scan DataTables matching path filter");
         Console.WriteLine();
-        Console.WriteLine("  --include-loc         Include localization tables from /Data/TextDB/");
-        Console.WriteLine("                        (excluded by default)");
+        Console.WriteLine("  --include-loc         Include all localization tables from /Data/TextDB/");
+        Console.WriteLine("                        (Loc_En is always included, others excluded by default)");
         Console.WriteLine();
         Console.WriteLine("  --export [path]       Export index to JSON file and exit");
         Console.WriteLine("                        Default filename: DataTableIndex.json");

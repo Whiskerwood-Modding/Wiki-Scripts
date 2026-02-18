@@ -55,8 +55,24 @@ public class GraphGenerator
         var dataTableFiles = _provider.Files.Values
             .Where(f => f.Extension.Equals("uasset", StringComparison.OrdinalIgnoreCase))
             .Where(f => pathFilter == null || f.Path.Contains(pathFilter, StringComparison.OrdinalIgnoreCase))
-            .Where(f => includeLoc || !f.Path.Contains("/Data/TextDB/", StringComparison.OrdinalIgnoreCase))
-            .Where(f => !f.Path.StartsWith("Engine/", StringComparison.OrdinalIgnoreCase))
+            .Where(f => {
+                // Always exclude Engine tables
+                if (f.Path.StartsWith("Engine/", StringComparison.OrdinalIgnoreCase))
+                    return false;
+                
+                // Check if it's in the localization folder
+                if (f.Path.Contains("/Data/TextDB/", StringComparison.OrdinalIgnoreCase))
+                {
+                    // Always include Loc_En
+                    if (f.Path.Contains("/Loc_En", StringComparison.OrdinalIgnoreCase))
+                        return true;
+                    
+                    // Include other loc tables only if flag is set
+                    return includeLoc;
+                }
+                
+                return true;
+            })
             .ToList();
         
         Console.WriteLine($"Found {dataTableFiles.Count} potential asset files to scan");
@@ -394,6 +410,35 @@ public class GraphGenerator
     }
     
     /// <summary>
+    /// Get the schema (field names and default values) for a DataTable
+    /// </summary>
+    public List<(string Key, string DefaultValue)>? GetTableSchema(string tablePath, out string? matchedTable)
+    {
+        // Find exact match or partial match
+        matchedTable = _tableData.Keys.FirstOrDefault(k => 
+            k.Equals(tablePath, StringComparison.OrdinalIgnoreCase) ||
+            k.Contains(tablePath, StringComparison.OrdinalIgnoreCase));
+        
+        if (matchedTable == null || !_tableData.TryGetValue(matchedTable, out var rows))
+            return null;
+        
+        // Get the first row to determine schema
+        var firstRow = rows.FirstOrDefault().Value;
+        if (firstRow == null)
+            return null;
+        
+        var schema = new List<(string Key, string DefaultValue)>();
+        
+        foreach (var kvp in firstRow.OrderBy(k => k.Key))
+        {
+            var defaultValue = "";
+            schema.Add((kvp.Key, defaultValue));
+        }
+        
+        return schema;
+    }
+    
+    /// <summary>
     /// Export the entire index to a JSON file
     /// </summary>
     public void ExportToJson(string outputPath)
@@ -435,14 +480,16 @@ public class GraphGenerator
     {
         Console.WriteLine("\n=== DataTable Reference Search Tool ===");
         Console.WriteLine("Commands:");
-        Console.WriteLine("  search <key>     - Search for partial matches");
-        Console.WriteLine("  exact <key>      - Search for exact matches");
-        Console.WriteLine("  keys <pattern>   - List all keys matching pattern");
-        Console.WriteLine("  tables           - List all indexed DataTables");
-        Console.WriteLine("  rows <table>     - List all rows in a DataTable");
-        Console.WriteLine("  row <table> <row> - Show full row data");
-        Console.WriteLine("  export <path>    - Export entire index to JSON file");
-        Console.WriteLine("  quit             - Exit");
+        Console.WriteLine("  search <key>        - Search for partial matches");
+        Console.WriteLine("  exact <key>         - Search for exact matches");
+        Console.WriteLine("  keys <pattern>      - List all keys matching pattern");
+        Console.WriteLine("  tables              - List all indexed DataTables");
+        Console.WriteLine("  rows <table>        - List all rows in a DataTable");
+        Console.WriteLine("  row <table> <row>   - Show full row data");
+        Console.WriteLine("  export <path>       - Export entire index to JSON file");
+        Console.WriteLine("  bpvar               - Generate blueprint variable (interactive)");
+        Console.WriteLine("  schema <table>      - Show DataTable schema/structure");
+        Console.WriteLine("  quit                - Exit");
         Console.WriteLine();
         
         while (true)
@@ -565,6 +612,22 @@ public class GraphGenerator
                     ExportToJson(arg);
                     break;
                     
+                case "bpvar":
+                case "gen":
+                    var bpVarGen = new BPVarGenerator(this);
+                    bpVarGen.InteractiveGenerate();
+                    break;
+                    
+                case "schema":
+                    if (string.IsNullOrEmpty(arg))
+                    {
+                        Console.WriteLine("Usage: schema <tableName>");
+                        continue;
+                    }
+                    var schemaGen = new BPVarGenerator(this);
+                    schemaGen.PrintTableSchema(arg);
+                    break;
+                    
                 case "help":
                 case "?":
                     PrintInteractiveHelp();
@@ -603,6 +666,10 @@ public class GraphGenerator
         Console.WriteLine("  export [path]         - Export entire index to JSON file (alias: dump)");
         Console.WriteLine("                          Default: DataTableIndex.json");
         Console.WriteLine();
+        Console.WriteLine("Blueprint Variable Generator:");
+        Console.WriteLine("  bpvar                 - Interactive BPVar generation (alias: gen)");
+        Console.WriteLine("  schema <table>        - Show DataTable schema/structure");
+        Console.WriteLine();
         Console.WriteLine("Other Commands:");
         Console.WriteLine("  help                  - Show this help message (alias: ?)");
         Console.WriteLine("  quit                  - Exit the tool (alias: q, exit)");
@@ -614,6 +681,7 @@ public class GraphGenerator
         Console.WriteLine("  > rows Buildings");
         Console.WriteLine("  > row Buildings building.lumbermill");
         Console.WriteLine("  > export MyIndex.json");
+        Console.WriteLine("  > schema Recipes");
     }
     
     private void PrintRowData(object data, string indent)
