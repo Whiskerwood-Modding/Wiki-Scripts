@@ -1,4 +1,5 @@
-﻿using CUE4Parse.FileProvider;
+﻿using System.Text.Encodings.Web;
+using CUE4Parse.FileProvider;
 using CUE4Parse.UE4.Assets.Exports.Engine;
 using CUE4Parse.UE4.Assets.Objects;
 using CUE4Parse.UE4.Assets.Objects.Properties;
@@ -457,7 +458,8 @@ public class GraphGenerator
         {
             var json = System.Text.Json.JsonSerializer.Serialize(exportData, new System.Text.Json.JsonSerializerOptions
             {
-                WriteIndented = true
+                WriteIndented = true,
+                Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping
             });
             
             File.WriteAllText(outputPath, json);
