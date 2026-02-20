@@ -66,24 +66,16 @@ class Program
             // Create graph generator and build index
             var graphGenerator = new GraphGenerator(provider);
             
-            // Optional: Filter to only scan certain paths (e.g., "DataTable" or "Data")
-            // Pass null to scan all .uasset files
+            // Optional: Filter to only scan certain paths
             string? pathFilter = null;
-            bool includeLoc = false;
+            bool includeLoc = args.Contains("--include-loc");
             
-            // Parse command line args for initial search or path filter
-            if (args.Length > 0)
+            // Check for --filter flag
+            var filterValue = GetArgValue(args, "--filter", "");
+            if (!string.IsNullOrEmpty(filterValue))
             {
-                if (args[0] == "--filter" && args.Length > 1)
-                {
-                    pathFilter = args[1];
-                    Console.WriteLine($"Using path filter: {pathFilter}");
-                }
-                else if (args[0] == "--include-loc" || args.Contains("--include-loc"))
-                {
-                    includeLoc = true;
-                    Console.WriteLine("Including localization tables from /Data/TextDB/");
-                }
+                pathFilter = filterValue;
+                Console.WriteLine($"Using path filter: {pathFilter}");
             }
             
             if (!includeLoc)
@@ -98,19 +90,41 @@ class Program
             graphGenerator.BuildIndex(pathFilter, includeLoc);
             
             // Check for export flag
-            var exportIndex = Array.IndexOf(args, "--export");
-            if (exportIndex >= 0)
+            if (args.Contains("--export"))
             {
-                var outputPath = exportIndex + 1 < args.Length ? args[exportIndex + 1] : "DataTableIndex.json";
+                var expIdx = Array.IndexOf(args, "--export");
+                var outputPath = (expIdx + 1 < args.Length && !args[expIdx + 1].StartsWith("--"))
+                    ? args[expIdx + 1]
+                    : "DataTableIndex.json";
                 graphGenerator.ExportToJson(outputPath);
                 return;
             }
             
-            // If a search term was provided as argument, search and exit
-            if (args.Length > 0 && args[0] != "--filter" && args[0] != "--include-loc")
+            // Collect all known flags so we can find a bare search term
+            var knownFlags = new HashSet<string>(StringComparer.OrdinalIgnoreCase)
             {
-                var searchTerm = args[0];
-                bool exactMatch = args.Length > 1 && args[1] == "--exact";
+                "--pak-dir", "--mappings", "--version", "--filter",
+                "--include-loc", "--export", "--help", "-h", "--exact"
+            };
+            
+            // Find the first arg that is not a known flag and not a value consumed by a flag
+            string? searchTerm = null;
+            for (int i = 0; i < args.Length; i++)
+            {
+                if (knownFlags.Contains(args[i]))
+                {
+                    // Flags that consume a following value
+                    if (args[i] is "--pak-dir" or "--mappings" or "--version" or "--filter" or "--export")
+                        i++; // skip the value too
+                    continue;
+                }
+                searchTerm = args[i];
+                break;
+            }
+            
+            if (searchTerm != null)
+            {
+                bool exactMatch = args.Contains("--exact");
                 graphGenerator.PrintSearchResults(searchTerm, exactMatch);
             }
             else
